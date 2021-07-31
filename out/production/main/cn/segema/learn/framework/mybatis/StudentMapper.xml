@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.segema.learn.framework.mybatis.StudentDao">
+	<insert id="insertStudent" parameterType="Student"><!-- mapper动态代理。其底层自动实现Dao接口 -->
+		insert into student(name,age,score) values(#{name}, #{age}, #{score})
+		<!-- name是表字段，#{name}这个name是属性，mybatis会自动添加get方法获取属性值，不是成员变量 -->
+	</insert>
+
+
+	<insert id="insertStudentCacheId" parameterType="Student">
+		insert into student(name,age,score) values(#{name}, #{age}, #{score})
+		<!-- mysql:AFTER oracle：BEFORE mysql是先插入后有id -->
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+			select @@identity
+		</selectKey>
+	</insert>
+
+
+	<delete id="deleteStudentById">
+		delete from student where id = #{xxx}   <!-- 这块的#{}仅仅是一个占位符，可以随便指定值 -->
+	</delete>
+
+	<update id="updateStudentById" parameterType="Student">
+		update student set
+		name=#{name},age=#{age},score=#{score} where id=#{id}
+	</update>
+
+	<select id="selectAllStudents" resultType="Student">
+		select id,name,age,score from student
+	</select>
+
+	<select id="selectById" resultType="Student">
+		select id,name,age,score from
+		student where id=#{id}
+	</select>
+
+	<select id="selectByName" resultType="Student">
+		<!-- 推荐使用这种 -->
+		select id,name,age,score from student where name like '%' #{xxx} '%'
+		<!-- select id,name,age,score from student where name like concat('%',#{xxx},'%') -->
+		<!-- 这种不建议使用，这种使用statement查询方式，有sql注入风险 -->
+		<!-- select id,name,age,score from student where name like '%${value}%' -->
+	</select>
+
+</mapper>
