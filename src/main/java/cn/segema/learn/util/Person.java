@@ -15,6 +15,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonRootName("Person")
 public class Person {
+	
+	public Person(String name, String nickname, int age, String identityCode, LocalDate birthday) {
+		super();
+		this.name = name;
+		this.nickname = nickname;
+		this.age = age;
+		this.identityCode = identityCode;
+		this.birthday = birthday;
+	}
+
 	@JsonProperty("Name")
 	private String name;
 
